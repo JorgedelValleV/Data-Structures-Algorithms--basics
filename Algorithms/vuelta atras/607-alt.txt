@@ -1,0 +1,95 @@
+#include <iostream>
+#include <iomanip>
+#include <stdio.h>
+#include <fstream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef vector<vi> mat;
+
+
+void calidad (vi const & maxM, int & sumaResto, int & cMax,int  & cAhora, intmaquina, vi const & anchuraM, vi const & anchuraC, mat const & calidades,vb & carrs){
+    for (int carretera = 0; carretera < anchuraC.size(); ++carretera){
+        if (carrs[carretera] && anchuraM[maquina]<= anchuraC[carretera] && (cAhora + sumaResto >= cMax)){
+            cAhora+=calidades[maquina][carretera];
+            carrs[carretera] = false;
+            sumaResto-=maxM[maquina];
+            if(maquina+1==anchuraM.size()) {
+                if(cMax < cAhora)
+                    cMax = cAhora;
+            }
+            else calidad(maxM, sumaResto,cMax,cAhora,maquina+1,anchuraM,anchuraC,calidades,carrs);
+            cAhora-=calidades[maquina][carretera];
+            carrs[carretera] = true;
+            sumaResto+=maxM[maquina];
+        }
+    }
+    if(maquina+1==anchuraM.size()) {
+        if(cMax < cAhora)
+            cMax = cAhora;
+    }
+    else calidad(maxM, sumaResto,cMax,cAhora,maquina+1,anchuraM,anchuraC,calidades,carrs);
+}
+
+
+void resuelve()
+{
+    
+    //LECTURA DE DATOS
+    
+    int n,m; //n numero de carreteras, m numero de quitanieves n>m
+    cin>>m>>n;
+    vi anchuraM(m); //leemos la anchura de las maquinas 1<=a_i<=1000
+    for (int i=0;i<m;i++) {cin>>anchuraM[i];}
+    
+    vi anchuraC(n); //leemos la anchura de las carreteras 1<=a_i<=1000.
+    for (int i=0;i<n;i++) {cin>>anchuraC[i];}
+    
+    mat calidades(m,vi(n));//calidades de las carreteras: 1<=p_i<=1000
+    
+    for (int i=0;i<m;i++)
+    {
+        for (int j=0;j<n;j++)
+        {cin>>calidades[i][j];}
+    };
+    
+    //CALCULO DEL RESULTADO
+    int cMax=0;
+    int cAhora=0;
+    vb carrs(n,true);
+    vi maxM(m);
+    int sumaResto = 0;
+    for (int i = 0; i < m; ++i) {
+        int max = calidades[i][0];
+        for (int j = 1; j < n; ++j){
+            if (calidades[i][j] > max){
+                max = calidades[i][j];
+            }
+        }
+        maxM[i] = max;
+        sumaResto+= maxM[i];
+    }
+    //Calcula la calidad maxima: cMax. Llama aqui a tu funcion
+    if (m>0) calidad(maxM,sumaResto,cMax,cAhora, 0, anchuraM, anchuraC, calidades,carrs);
+    
+    //ESCRITURA DEL RESULTADO
+    
+    cout <<cMax<<endl;
+    
+    
+    
+}
+
+int main() {
+    unsigned int numCasos;
+    cin >> numCasos;
+    // Resolvemos
+    while (numCasos--) {
+        resuelve();
+    }
+    return 0;
+}
