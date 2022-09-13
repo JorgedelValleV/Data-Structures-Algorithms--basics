@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+using l = long long int;
+bool rec(vector<l>& v,l ini,l fin,l & min ,l & max) {
+	if (fin - ini < 2) {
+		min = max = (fin);
+		return true;
+	}
+	else {
+		l aux = v[ini];
+		l m = v[fin];
+		for (l i = (ini*2); i < fin; ++i) {
+			if (v[i] > aux) {
+				ini = i;
+				aux = v[ini];
+			}
+		}
+
+		l mini, maxi, mind, maxd;
+		bool ok1 = rec(v, ini, m, mini, maxi);
+		bool ok2 = rec(v, m+1, fin, mind, maxd);
+		bool ok3 = true;
+		if (mini < mind)min = mini;
+		else min = mind;
+		if (maxi < maxd)aux = maxi;
+		else;
+		for (int i = m+1; i < fin; ++i) {
+			if (mini < v[i])ok3 = false;
+		}
+		return ok1 && ok2 && ok3;
+	}
+}
+bool problema() {
+	int N;
+	cin >> N;
+	if (!cin)return false;
+	vector<l> v(N);
+	for (int i = 0; i < N; ++i) {
+		cin >> v[i];
+	}
+	l min, max;
+	if (rec(v,0,N, min, max))cout << "SIEMPRE PREMIO\n";
+	else cout << "ELEGIR OTRA\n";
+}
+int main() {
+	while (problema()){
+
+	}
+	system("Pause");
+	return 0;
+}
